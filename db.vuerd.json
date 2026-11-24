@@ -1,0 +1,271 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json",
+  "version": "3.0.0",
+  "settings": {
+    "originX": 0,
+    "originY": 0,
+    "zoomLevel": 1,
+    "show": 431,
+    "database": 4,
+    "databaseName": "",
+    "canvasType": "ERD",
+    "language": 1,
+    "tableNameCase": 4,
+    "columnNameCase": 2,
+    "bracketType": 1,
+    "relationshipDataTypeSync": true,
+    "columnOrder": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "maxWidthComment": -1,
+    "lockSettings": 63
+  },
+  "doc": {
+    "tableIds": [
+      "03ha88k513ti4lkjgzfnkflog",
+      "03ha88l3br3mvmiahq7hg89nz"
+    ]
+  },
+  "collections": {
+    "tableEntities": {
+      "03ha88k513ti4lkjgzfnkflog": {
+        "id": "03ha88k513ti4lkjgzfnkflog",
+        "name": "voters",
+        "columnIds": [
+          "03ha8932xm7beodlwtj3pcjk9",
+          "03ha88lzwqbudaimtav6j0l33",
+          "03ha88xhun0w5t0kz3dmt7b37",
+          "03ha8ai6alvff0ak4q4o9c6kk",
+          "03ha8aixyrqvr5qkrytohu8c2",
+          "03ha8bk2mrtfkfvd8d3d0tas1",
+          "03hafnf9gntkeil1f9x70lg9r",
+          "03haltyun4325xg58qifm66td",
+          "03halu0cl5z1fo4r1nk0lmzyn",
+          "03halub2bgt60l2isbpazykhy",
+          "03haluf1w6ui46ayskcj4xpfn",
+          "03halufwa0wjwq2n15ffk7n29",
+          "03haluh8nvbnjmwn21iqqbi6v",
+          "03haluht2b5qrolvgzi3d95im",
+          "03haluiqzfsao5xmfjg5721gl",
+          "03halujfbwo5qeruyol19f6wn",
+          "03halujyc2cpb8x78n63tiofr",
+          "03halukw8fr71uknqunyaqdy1",
+          "03halum7qu40yxuewhd2ckwe1"
+        ],
+        "ui": {
+          "x": -421.2932,
+          "y": 177.5647,
+          "color": "#bdee63"
+        }
+      },
+      "03ha88l3br3mvmiahq7hg89nz": {
+        "id": "03ha88l3br3mvmiahq7hg89nz",
+        "name": "candidates",
+        "columnIds": [
+          "03ha8932xm7beodlwtjxtcsiq",
+          "03ha8awzw44tln4wct7etvzk4",
+          "03ha8aynffiox65b5ikd60bpq",
+          "03ha8az0rfvttx9b3gghiuit4",
+          "03haeyopic7so5k49bn11pgmx",
+          "03ha8c81wqbulz7wa3tb382bw"
+        ],
+        "ui": {
+          "x": 2.1932,
+          "y": 174.4588
+        }
+      }
+    },
+    "tableColumnEntities": {
+      "03ha88lzwqbudaimtav6j0l33": {
+        "id": "03ha88lzwqbudaimtav6j0l33",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "first_name",
+        "dataType": "VARCHAR",
+        "options": 0
+      },
+      "03ha88xhun0w5t0kz3dmt7b37": {
+        "id": "03ha88xhun0w5t0kz3dmt7b37",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "last_name",
+        "dataType": "VARCHAR",
+        "options": 0
+      },
+      "03ha8932xm7beodlwtj3pcjk9": {
+        "id": "03ha8932xm7beodlwtj3pcjk9",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "voters_id",
+        "dataType": "INT",
+        "options": 10
+      },
+      "03ha8ai6alvff0ak4q4o9c6kk": {
+        "id": "03ha8ai6alvff0ak4q4o9c6kk",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "email",
+        "dataType": "VARCHAR",
+        "options": 0
+      },
+      "03ha8aixyrqvr5qkrytohu8c2": {
+        "id": "03ha8aixyrqvr5qkrytohu8c2",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "password",
+        "dataType": "VARCHAR",
+        "options": 0
+      },
+      "03ha8bk2mrtfkfvd8d3d0tas1": {
+        "id": "03ha8bk2mrtfkfvd8d3d0tas1",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "chairpersons_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03hafnf9gntkeil1f9x70lg9r": {
+        "id": "03hafnf9gntkeil1f9x70lg9r",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "dcep_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03haltyun4325xg58qifm66td": {
+        "id": "03haltyun4325xg58qifm66td",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "dem_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03halu0cl5z1fo4r1nk0lmzyn": {
+        "id": "03halu0cl5z1fo4r1nk0lmzyn",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "philippine_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03halub2bgt60l2isbpazykhy": {
+        "id": "03halub2bgt60l2isbpazykhy",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "asean_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03haluf1w6ui46ayskcj4xpfn": {
+        "id": "03haluf1w6ui46ayskcj4xpfn",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "brunei_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03halufwa0wjwq2n15ffk7n29": {
+        "id": "03halufwa0wjwq2n15ffk7n29",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "cambodia_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03haluh8nvbnjmwn21iqqbi6v": {
+        "id": "03haluh8nvbnjmwn21iqqbi6v",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "lao_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03haluht2b5qrolvgzi3d95im": {
+        "id": "03haluht2b5qrolvgzi3d95im",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "malaysia_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03haluiqzfsao5xmfjg5721gl": {
+        "id": "03haluiqzfsao5xmfjg5721gl",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "myanmar_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03halujfbwo5qeruyol19f6wn": {
+        "id": "03halujfbwo5qeruyol19f6wn",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "ingapore_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03halujyc2cpb8x78n63tiofr": {
+        "id": "03halujyc2cpb8x78n63tiofr",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "thailand_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03halukw8fr71uknqunyaqdy1": {
+        "id": "03halukw8fr71uknqunyaqdy1",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "vietnam_status",
+        "dataType": "VARCHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03halum7qu40yxuewhd2ckwe1": {
+        "id": "03halum7qu40yxuewhd2ckwe1",
+        "tableId": "03ha88k513ti4lkjgzfnkflog",
+        "name": "timor_stauts",
+        "dataType": "VARHAR",
+        "default": "NOT VOTED",
+        "options": 0
+      },
+      "03ha8932xm7beodlwtjxtcsiq": {
+        "id": "03ha8932xm7beodlwtjxtcsiq",
+        "tableId": "03ha88l3br3mvmiahq7hg89nz",
+        "name": "candidates_id",
+        "dataType": "int",
+        "options": 2
+      },
+      "03ha8awzw44tln4wct7etvzk4": {
+        "id": "03ha8awzw44tln4wct7etvzk4",
+        "tableId": "03ha88l3br3mvmiahq7hg89nz",
+        "name": "first_name",
+        "options": 0
+      },
+      "03ha8aynffiox65b5ikd60bpq": {
+        "id": "03ha8aynffiox65b5ikd60bpq",
+        "tableId": "03ha88l3br3mvmiahq7hg89nz",
+        "name": "last_name",
+        "options": 0
+      },
+      "03ha8az0rfvttx9b3gghiuit4": {
+        "id": "03ha8az0rfvttx9b3gghiuit4",
+        "tableId": "03ha88l3br3mvmiahq7hg89nz",
+        "name": "email",
+        "options": 0
+      },
+      "03ha8c81wqbulz7wa3tb382bw": {
+        "id": "03ha8c81wqbulz7wa3tb382bw",
+        "tableId": "03ha88l3br3mvmiahq7hg89nz",
+        "name": "vote_count",
+        "options": 0
+      },
+      "03haeyopic7so5k49bn11pgmx": {
+        "id": "03haeyopic7so5k49bn11pgmx",
+        "tableId": "03ha88l3br3mvmiahq7hg89nz",
+        "name": "position",
+        "options": 0
+      }
+    }
+  }
+}

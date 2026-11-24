@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AUS Fellows Society Voting System</title>
+<link rel="icon" href="assest/logo.png">
+<link rel="apple-touch-icon" href="assest/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+<style>
+/* AUS Fellows Society Voting System - styles. Colours live in :root. */
+:root{--navy:#1b2380;--navy2:#2c37b5;--per:#7377e6;--lav:#eef0fb;--lav2:#d5d8f6;--line:#e1e4f5;--muted:#5b6393;--ink:#141a5c;--bg:#fff;color-scheme:light}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:90px;scroll-behavior:smooth;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Montserrat,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overflow-x:clip}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#fff;z-index:60}
+button,input{font:inherit}
+button{cursor:pointer}
+button,a,.chip,.tab{touch-action:manipulation}
+a{color:inherit}
+img,video,svg{max-width:100%}
+:focus-visible{outline:3px solid var(--per);outline-offset:2px}
+.view{display:none}
+.v-home #v-home,.v-login #v-login,.v-dashboard #v-dashboard,.v-vote #v-vote,.v-guideline #v-guideline{display:block}
+.logo{font-weight:800;font-size:1.35rem;letter-spacing:.02em;display:inline-flex;align-items:center;text-decoration:none;color:var(--navy);min-width:0}
+.logo img{height:44px;width:auto;display:block}
+.logo span{font-size:.95rem;line-height:1.1;margin-left:8px;white-space:nowrap}
+.btn{border:1.5px solid var(--navy);background:var(--navy);color:#fff;border-radius:999px;padding:9px 20px;font-weight:700;font-size:.85rem;text-decoration:none;display:inline-block;text-align:center;line-height:1.3}
+.btn.out{background:#fff;color:var(--navy)}
+.btn.big{padding:13px 28px;font-size:.95rem}
+.btn.wh{background:#fff;color:var(--navy);border-color:#fff}
+.btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.75)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.burger{width:44px;height:44px;padding:0;border:1px solid var(--line);background:#fff;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:none;-webkit-appearance:none;appearance:none}
+.burger span{display:block;flex:none;width:20px;height:3px;background:var(--navy);border-radius:2px}
+
+/* sidebar */
+.scrim{position:fixed;inset:0;background:rgba(10,15,60,.5);opacity:0;pointer-events:none;transition:opacity .2s;z-index:70}
+.scrim.on{opacity:1;pointer-events:auto}
+.side{position:fixed;top:0;bottom:0;left:0;width:260px;max-width:84vw;background:var(--lav);z-index:80;transform:translateX(-100%);transition:transform .25s;padding:calc(18px + env(safe-area-inset-top,0px)) 16px 18px;display:flex;flex-direction:column;overflow:auto;visibility:hidden}
+.side.on{transform:none;visibility:visible;display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:flex-start;gap:0}
+.sx{align-self:flex-end;border:0;background:none;font-size:1.7rem;color:var(--navy);line-height:1}
+.prof{text-align:center;padding:6px 0 20px;display:none}
+.auth .prof{display:block}
+.prof img{width:72px;height:72px;border-radius:50%;border:3px solid #fff;display:block;margin:0 auto 8px}
+.prof b{display:block;word-break:break-word}
+.side nav{display:flex;flex-direction:column;gap:4px}
+.side nav a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;color:var(--ink)}
+.side nav a i{width:14px;height:14px;border-radius:4px;background:currentColor;opacity:.7}
+.side nav a.cur{background:var(--navy2);color:#fff}
+
+/* public header */
+.hh{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:40}
+.hh .in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:12px clamp(16px,4vw,40px)}
+.hh nav{margin-left:auto;display:none;gap:26px}
+.hh nav a{text-decoration:none;font-weight:600;font-size:.88rem;color:var(--muted);padding:6px 0;border-bottom:2px solid transparent}
+.hh nav a:hover{color:var(--navy);border-color:var(--navy)}
+.hh .acts{margin-left:auto;display:flex;gap:8px;align-items:center}
+.hh .acts .btn{padding:8px 16px}
+.hh .acts .hide-s{display:none}
+@media (min-width:860px){
+  .hh nav{display:flex}
+  .hh .acts{margin-left:10px}
+  .hh .acts .hide-s{display:inline-block}
+  .hh .burger{display:none}
+}
+
+/* app header */
+.ha{display:none;align-items:center;gap:12px;padding:12px clamp(16px,3vw,32px);background:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:30;border-bottom:1px solid var(--line)}
+.app .ha{display:flex}
+.app .hh{display:none}
+.ha .who{margin-left:auto;display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem;min-width:0}
+.ha .who img{width:30px;height:30px;border-radius:50%;flex:none}
+.ha .who span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:30vw}
+@media (min-width:960px){
+  .app .side{transform:none;visibility:visible}
+  .app .page{margin-left:260px}
+  .app .ha .burger,.app .sx{display:none}
+}
+
+/* hero */
+.hero{position:relative;color:#fff;overflow:hidden;background:var(--navy);min-height:calc(100vh - 69px);min-height:calc(100svh - 69px);display:flex;align-items:center}
+.hero>img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center 35%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,20,90,.94) 0%,rgba(14,20,90,.78) 42%,rgba(14,20,90,.2) 100%)}
+@media (max-width:700px){
+  .hero::after{background:linear-gradient(180deg,rgba(14,20,90,.55) 0%,rgba(14,20,90,.92) 70%)}
+  .hero{align-items:flex-end}
+}
+.hero .in{position:relative;z-index:2;max-width:1180px;margin:0 auto;width:100%;padding:clamp(36px,7vw,80px) clamp(16px,4vw,40px);padding-bottom:calc(clamp(36px,7vw,80px) + 48px)}
+.hero h1{margin:0 0 14px;font-size:clamp(1.9rem,5.6vw,3.4rem);line-height:1.1;font-weight:800;max-width:20ch}
+.hero p{margin:0 0 24px;color:#dfe2ff;max-width:46ch;font-size:clamp(.95rem,2.2vw,1.08rem)}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.cue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:2;color:#fff;text-decoration:none;font-size:.8rem;font-weight:700;text-align:center;line-height:1.2}
+.cue::after{content:"\2193";display:block;font-size:1.2rem}
+section.s{padding:clamp(34px,6vw,64px) clamp(16px,4vw,40px)}
+.wrap{max-width:1180px;margin:0 auto}
+h2.t{font-size:clamp(1.4rem,3.6vw,2rem);margin:0 0 4px;color:var(--navy);font-weight:800}
+.sub{color:var(--muted);margin:0 0 20px;font-size:.92rem}
+.about{background:var(--lav)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
+.step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.step h3{margin:0 0 6px;font-size:1rem;color:var(--navy)}
+.step p{margin:0;color:var(--muted);font-size:.92rem}
+footer{background:var(--navy);color:#cfd4ff;padding:10px clamp(16px,4vw,40px);font-size:.74rem}
+.foot{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:6px 24px}
+.partner{display:flex;align-items:center;gap:10px}
+.partner p{margin:0;font-weight:500;font-size:.74rem;color:#cfd4ff;white-space:nowrap}
+.partner img{height:28px;width:auto;display:block}
+.foot .fine{margin:0;font-size:.74rem;text-align:right;min-width:0;overflow-wrap:anywhere}
+@media (max-width:600px){
+  footer{padding:8px 12px}
+  .foot{gap:10px}
+  .partner{gap:6px;flex:none}
+  .partner p{font-size:.66rem}
+  .partner img{height:24px}
+  .foot .fine{font-size:.62rem;line-height:1.3}
+}
+
+/* candidate tabs + chips */
+.tabs{display:flex;gap:6px;background:var(--lav);border-radius:999px;padding:5px;margin-bottom:14px;width:max-content;max-width:100%;overflow-x:auto}
+.tab{flex:none;border:0;background:transparent;color:var(--navy);font-weight:700;font-size:.88rem;padding:9px 20px;border-radius:999px}
+.tab[aria-pressed="true"]{background:var(--navy);color:#fff}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 14px;-webkit-overflow-scrolling:touch}
+@media (min-width:760px){.chips{flex-wrap:wrap;overflow:visible}}
+.chip{flex:none;display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:#fff;color:var(--navy);border-radius:999px;padding:6px 14px;font-weight:600;font-size:.82rem;white-space:nowrap}
+.chip .flag{width:20px}
+.chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.flag{display:inline-block;width:28px;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:3px;box-shadow:0 0 0 1px rgba(20,26,92,.25),0 1px 3px rgba(20,26,92,.25);vertical-align:middle;background:#fff}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.card{background:linear-gradient(#dde0f8,#f3f4fd 55%,#fff);border:1px solid var(--line);border-radius:16px;padding:22px 12px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.ph{position:relative;margin-bottom:8px}
+.card .av{width:96px;height:96px;border-radius:50%;border:4px solid #fff;object-fit:cover;display:block;background:#fff}
+.fb{position:absolute;right:-8px;bottom:0;background:#fff;border-radius:6px;padding:3px;display:grid;place-items:center;box-shadow:0 1px 4px rgba(20,26,92,.3)}
+.fb .flag{width:30px}
+.card h3{margin:0;font-size:.95rem;overflow-wrap:anywhere}
+.card .pl{display:flex;align-items:center;gap:6px;justify-content:center;font-size:.72rem;font-weight:700;color:var(--navy);margin:2px 0}
+.card small{color:var(--muted);font-size:.78rem;margin-bottom:10px}
+.bt{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:auto}
+.bt .btn{padding:7px 14px;font-size:.78rem}
+.vt.sel{background:#fff;color:var(--navy)}
+.psec{background:#fff;border:1px solid var(--line);border-radius:18px;padding:clamp(14px,2.5vw,24px);margin:14px 0;scroll-margin-top:90px;min-width:0}
+.psec>header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.psec>header .flag{width:36px}
+.psec>header h3{margin:0;font-size:1.1rem;color:var(--navy);line-height:1.25;overflow-wrap:anywhere}
+.psec>header span.n{margin-left:auto;flex:none;background:var(--lav);color:var(--navy);border-radius:999px;padding:3px 12px;font-size:.75rem;font-weight:700}
+.psec .empty{margin:0;color:var(--muted);font-size:.88rem}
+
+/* login */
+.lg{min-height:70vh;display:grid;place-items:center;padding:clamp(24px,6vw,60px) 16px;background:linear-gradient(var(--lav),#fff)}
+.lg form{width:min(420px,100%);background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 10px 30px rgba(27,35,128,.1)}
+.lg h1{margin:0 0 4px;font-size:1.5rem;color:var(--navy)}
+.lg p{margin:0 0 18px;color:var(--muted);font-size:.88rem}
+.lg label{display:block;font-weight:700;font-size:.8rem;margin:12px 0 5px}
+.lg input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;background:#fff;color:var(--ink)}
+.lg .btn{width:100%;margin-top:18px;padding:12px}
+.note{background:var(--lav);border-radius:10px;padding:10px 12px;font-size:.82rem;margin-bottom:14px;display:none}
+.note.on{display:block}
+.lg .alt{margin-top:14px;text-align:center;font-size:.82rem}
+
+/* app pages (dashboard / ballot) */
+.pg{padding:clamp(16px,3vw,32px);min-width:0}
+.pg h1{margin:0 0 2px;font-size:1.5rem}
+.pg h1 span{color:var(--navy)}
+.pg .lead{margin:0 0 18px;color:var(--muted);font-size:.85rem}
+.dgrid{display:grid;gap:16px}
+@media (min-width:900px){
+  .dgrid{grid-template-columns:1.9fr 1fr;grid-template-areas:"on cal" "live proc"}
+  .g-on{grid-area:on}.g-cal{grid-area:cal}.g-live{grid-area:live}.g-proc{grid-area:proc}
+}
+.pnl{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(27,35,128,.05);min-width:0}
+.pnl h2{margin:0 0 12px;font-size:.85rem}
+.on{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.on h3{margin:0 0 12px;font-size:1.25rem;color:var(--navy);line-height:1.25}
+.on svg{width:110px;flex:none}
+.ev{display:flex;gap:10px;align-items:center;font-size:.8rem;padding:8px 0;border-top:1px solid var(--line)}
+.ev b{background:var(--lav);border-radius:8px;padding:4px 10px;text-align:center;line-height:1.2;min-width:74px}
+.rh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.rh button{border:0;background:var(--lav);color:var(--navy);width:30px;height:30px;border-radius:50%;font-weight:800;flex:none}
+.rh b{font-size:.9rem;text-align:center;display:flex;gap:8px;align-items:center;justify-content:center}
+.bar{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:center;font-size:.78rem;margin:9px 0}
+.bar div{background:var(--lav);border-radius:4px;height:22px}
+.bar i{display:flex;justify-content:flex-end;align-items:center;height:100%;border-radius:4px;color:#fff;font-style:normal;font-weight:700;padding-right:6px;min-width:28px;transition:width .4s}
+.proc{display:grid;gap:16px;text-align:center;font-size:.8rem}
+.ring{width:70px;height:70px;border-radius:50%;margin:0 auto 6px;background:conic-gradient(var(--navy) calc(var(--p)*1%),var(--lav2) 0);display:grid;place-items:center}
+.ring span{width:54px;height:54px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:800}
+.pos{margin-bottom:30px}
+.pos h2{display:flex;gap:10px;align-items:center;justify-content:center;margin:0;font-size:1.05rem;color:var(--navy);text-align:center}
+.pos p{text-align:center;margin:2px 0 14px;color:var(--muted);font-size:.8rem}
+.locked{max-width:720px;margin:0 auto 24px;background:var(--lav);border:1.5px solid var(--lav2);border-radius:16px;padding:18px 20px;text-align:center}
+.locked h2{margin:0 0 4px;font-size:1.1rem;color:var(--navy)}
+.locked p{margin:0 0 14px;color:var(--muted);font-size:.9rem}
+.sub-bar{position:sticky;bottom:calc(8px + env(safe-area-inset-bottom,0px));background:var(--navy);color:#fff;border-radius:999px;padding:10px 12px 10px 22px;display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:520px;margin:0 auto;font-weight:600;font-size:.88rem;box-shadow:0 10px 30px rgba(27,35,128,.35)}
+.sub-bar .btn{background:#fff;color:var(--navy);border-color:#fff}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;z-index:100;font-size:.88rem;display:none;max-width:88vw}
+.guide{max-width:640px}
+.guide ol{padding-left:20px}
+.guide li{margin-bottom:12px;color:var(--muted)}
+.guide li b{color:var(--ink)}
+
+/* voting.html extras */
+.v-login .ha{display:flex}
+.v-login .ha .burger,.v-login .ha .who{display:none}
+.ha .back{margin-left:auto;padding:7px 14px;font-size:.8rem}
+.ha .who{margin-left:0}
+
+/* ---------- MOBILE / RESPONSIVE ---------- */
+@media (max-width:959px){
+  .btn,.chip,.tab{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  .rh button{width:40px;height:40px}
+  .sx{padding:6px 10px}
+}
+@media (max-width:600px){
+  .hh .in,.ha{gap:8px;padding-left:12px;padding-right:12px}
+  .logo img{height:36px}
+  .logo span{font-size:.8rem;margin-left:6px}
+  .hh .acts .btn{padding:6px 14px;min-height:40px}
+  .ha .back{padding:6px 12px;font-size:.75rem;min-height:40px}
+  .ha .who span{display:none}
+  .hero .in{padding-left:16px;padding-right:16px}
+  .tabs{width:100%}
+  .tab{flex:1 0 auto;padding:9px 12px;font-size:.8rem;white-space:nowrap}
+  .chips{margin:0 -4px;padding-left:4px;padding-right:4px}
+  .psec{padding:12px;border-radius:14px}
+  .psec>header{flex-wrap:wrap;gap:8px}
+  .psec>header h3{font-size:1rem}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .card{padding:16px 8px 12px}
+  .card .av{width:76px;height:76px}
+  .fb .flag{width:24px}
+  .card h3{font-size:.85rem}
+  .card small{font-size:.72rem}
+  .bt{flex-direction:column;width:100%;gap:6px}
+  .bt .btn{width:100%;padding:8px 6px;font-size:.78rem}
+  .pos h2{flex-wrap:wrap;font-size:1rem}
+  .sub-bar{max-width:none;margin:0 4px;padding:8px 8px 8px 16px;font-size:.8rem}
+  .sub-bar .btn{white-space:nowrap}
+  .toast{bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+  .pg{padding:14px 12px}
+  .pnl{padding:14px}
+  .on h3{font-size:1.1rem}
+  .on svg{width:84px}
+  .ev{flex-wrap:wrap}
+  .rh b{font-size:.82rem}
+  .bar{grid-template-columns:70px 1fr}
+  .bar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .proc{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:.68rem}
+  .lg{min-height:60vh;min-height:60dvh;padding:20px 12px}
+  .lg form{padding:20px}
+  .lg input{font-size:16px;min-height:46px}
+}
+/* minimalist look on phones: flatter, fewer extras, more white space */
+@media (max-width:600px){
+  .cue,.sub,.card small,.psec>header span.n{display:none}
+  .hero h1{font-size:1.7rem;margin-bottom:10px}
+  .hero p{display:block;font-size:.9rem;line-height:1.5;margin:0 0 18px;max-width:none}
+  .hero::after{background:linear-gradient(180deg,rgba(14,20,90,.35) 0%,rgba(14,20,90,.9) 75%)}
+  .hero .in{padding-bottom:32px}
+  section.s{padding:28px 16px}
+  h2.t{font-size:1.3rem;margin-bottom:14px}
+  .tabs{background:none;padding:0;gap:0;border-radius:0;border-bottom:1px solid var(--line)}
+  .tab{flex:1;background:none;border-radius:0;border-bottom:2px solid transparent;padding:10px 6px}
+  .tab[aria-pressed="true"]{background:none;color:var(--navy);border-bottom-color:var(--navy)}
+  .chip{border:0;background:var(--lav)}
+  .chip[aria-pressed="true"]{background:var(--navy)}
+  .psec{border:0;padding:0;margin:6px 0}
+  .psec>header{border-bottom:0;padding-bottom:0;margin-bottom:10px}
+  .card{background:#fff;box-shadow:none;border-radius:14px;padding:14px 8px}
+  .about{background:#fff}
+  .step{border:0;background:var(--lav);padding:14px}
+  .steps{gap:10px;margin-top:12px}
+}
+@media (max-width:400px){.logo span{display:none}}
+@media (max-width:340px){.grid{grid-template-columns:1fr}}
+@media (max-height:500px) and (orientation:landscape){
+  .hero{min-height:auto}
+  .hero .in{padding-top:24px;padding-bottom:72px}
+}
+/* phones/tablets: buttons live in the 3-bar menu (top-left), not in the header or the bottom of the cover */
+@media (max-width:859px){
+  .hh .acts{display:none}
+  .cta{flex-direction:column;gap:10px;width:100%;max-width:420px}
+  .cta .btn{width:100%;min-height:48px;display:inline-flex;align-items:center;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* =====================================================================
+   DETAILS POPUP ("View Details")
+   One single rule set (no duplicates fighting each other).
+   Desktop / tablet : centred card.
+   Phones (<=600px) : bottom sheet - header and buttons stay put,
+                      only the middle part scrolls. Swipe the header down to close.
+   ===================================================================== */
+html:has(dialog[open]),body:has(dialog[open]){overflow:hidden}
+
+dialog{
+  border:0;padding:0;margin:auto;
+  width:min(640px,calc(100vw - 24px));max-width:none;
+  max-height:90vh;max-height:90dvh;
+  border-radius:20px;background:#fff;color:var(--ink);
+  overflow:hidden;overscroll-behavior:contain;
+  box-shadow:0 30px 80px rgba(10,15,60,.45)
+}
+dialog[open]{display:flex;flex-direction:column;animation:zoom .22s ease-out}
+dialog::backdrop{background:rgba(10,15,60,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+@keyframes zoom{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+
+/* header (fixed at the top of the popup) */
+.dh{position:relative;flex:none;display:flex;gap:16px;align-items:center;background:var(--navy);color:#fff;padding:18px 64px 18px 20px}
+.dh>div{min-width:0}
+.dh img.av{width:84px;height:84px;border-radius:50%;border:3px solid #fff;object-fit:cover;flex:none;background:#fff}
+.dh h3{margin:0;font-size:1.25rem;line-height:1.25;overflow-wrap:anywhere}
+.dh p{margin:2px 0 0;color:#cfd4ff;font-size:.9rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.xb{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;font-size:1.7rem;line-height:1;display:grid;place-items:center;padding:0}
+.xb:hover{background:rgba(255,255,255,.35)}
+
+/* body (the only part that scrolls) */
+.db{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:20px 22px}
+.db p,.db li{overflow-wrap:anywhere}
+.db ul{margin:0;padding-left:20px}
+.db li{margin-bottom:4px}
+.db h4{margin:22px 0 8px;padding-top:16px;border-top:1px solid var(--line);color:var(--navy);font-size:.78rem;text-transform:uppercase;letter-spacing:.07em}
+#dq + h4{border-top:0;padding-top:0;margin-top:16px}
+.vid{aspect-ratio:16/9;width:100%;border-radius:12px;background:var(--lav);border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);text-align:center;overflow:hidden;padding:8px}
+.vid video{width:100%;height:100%;background:#000;display:block}
+.vid iframe{width:100%;height:100%;border:0;display:block;background:#000}
+.vid.has{padding:0}
+.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;display:block}
+
+/* buttons (fixed at the bottom of the popup, never scroll away) */
+.dfoot{flex:none;display:flex;gap:10px;justify-content:flex-end;padding:12px 22px;background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 16px rgba(27,35,128,.08)}
+.dfoot .btn{flex:0 0 auto;min-width:160px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;font-size:.92rem}
+
+/* phones: bottom sheet */
+@media (max-width:600px){
+  dialog{
+    position:fixed;inset:auto 0 0 0;margin:0;
+    width:100%;max-width:100%;height:auto;
+    max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px - env(safe-area-inset-top,0px));
+    border-radius:22px 22px 0 0
+  }
+  dialog[open]{animation:sheet .26s ease-out}
+  .dh{padding:24px 56px 14px 16px;gap:12px;touch-action:none}
+  .dh::before{content:"";position:absolute;top:8px;left:50%;width:44px;height:4px;margin-left:-22px;border-radius:4px;background:rgba(255,255,255,.5)}
+  .dh img.av{width:60px;height:60px}
+  .dh h3{font-size:1.05rem}
+  .dh p{font-size:.8rem}
+  .xb{top:14px;right:8px}
+  .db{padding:16px 16px 20px}
+  .db h4{margin-top:18px;padding-top:14px}
+  .dfoot{padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+  .dfoot .btn{flex:1 1 0;min-width:0}
+  /* photos: swipe sideways */
+  .gal{display:flex;overflow-x:auto;gap:10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding-bottom:6px}
+  .gal img{flex:none;width:80%;scroll-snap-align:start}
+}
+/* phones turned sideways (very little height): make the popup compact */
+@media (max-height:500px){
+  dialog{max-height:calc(100dvh - 8px)}
+  .dh{padding-top:12px;padding-bottom:10px}
+  .dh img.av{width:48px;height:48px}
+  .dh::before{display:none}
+  .dfoot{padding-top:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+  .dfoot .btn{min-height:40px}
+}
+@media (max-width:600px) and (prefers-reduced-motion:reduce){dialog[open]{animation:none}}
+</style>
+</head>
+<body class="v-home">
+<div class="scrim" id="scrim"></div>
+<aside class="side" id="side" aria-label="Menu">
+  <button class="sx" id="sx" aria-label="Close menu">&times;</button>
+  <nav id="snav"></nav>
+</aside>
+
+<div class="page">
+<header class="hh">
+  <div class="in">
+    <button class="burger" data-open aria-label="Open menu"><span></span><span></span><span></span></button>
+    <a class="logo" href="#home"><img src="assest/logo.png" alt="AUS Fellows Society logo"><span>AUS</span></a>
+    <nav><a href="#home">Home</a><a href="#candidates">Candidates</a><a href="#about">About</a><a href="#contact">Contact Us</a></nav>
+    <div class="acts" id="pubActs"></div>
+  </div>
+</header>
+
+<main>
+<section class="view" id="v-home">
+  <div class="hero" id="home">
+    <img src="assest/fam.jpg" alt="Group photo of the participants in traditional attire">
+    <div class="in">
+      <h1>AUS Fellows Society Voting System</h1>
+      <p>Choose your Co-Chairpersons, Deputies, and Country Leads in a secure and accessible platform.</p>
+      <div class="cta" id="heroCta"></div>
+    </div>
+    <a class="cue" href="#candidates">Meet the candidates</a>
+  </div>
+  <section class="s" id="candidates"><div class="wrap">
+    <h2 class="t">Meet the candidates</h2>
+    <p class="sub">Select View Details to read each candidate’s credentials, achievements and campaign.</p>
+    <div class="tabs" id="groupTabs" role="group" aria-label="Candidate groups"></div>
+    <nav class="chips" id="chips" aria-label="Positions"></nav>
+    <div id="gridHome"></div>
+  </div></section>
+  <section class="s about" id="about"><div class="wrap">
+    <h2 class="t">How voting works</h2>
+    <div class="steps">
+      <div class="step"><h3>Pre-register</h3><p>Fill in the pre-registration form so you are on the voter list.</p></div>
+      <div class="step"><h3>Log in and choose</h3><p>When voting opens, log in and pick your candidate for each position.</p></div>
+      <div class="step"><h3>Submit your ballot</h3><p>Votes can’t be changed after you submit.</p></div>
+    </div>
+  </div></section>
+  <footer id="contact">
+    <div class="foot">
+      <div class="partner">
+        <p>Collaboration with</p>
+        <img src="assest/politi-knows.png" alt="Politi-Knows - Play, Learn, Lead">
+      </div>
+      <p class="fine">AUS Fellows Society Voting System &middot; Contact us: elections@school.example</p>
+    </div>
+  </footer>
+</section>
+</main>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<dialog id="dlg" aria-labelledby="dn">
+  <div class="dh"><button class="xb" id="dxx" aria-label="Close details">&times;</button><img class="av" id="di" alt=""><div><h3 id="dn"></h3><p id="dp"></p></div></div>
+  <div class="db">
+    <p id="dq" style="margin:0;font-weight:600"></p>
+    <h4>About</h4><p id="dbio" style="margin:0"></p>
+    <h4>Credentials</h4><ul id="dc"></ul>
+    <h4>Achievements</h4><ul id="da"></ul>
+    <h4>Platform</h4><ul id="dl"></ul>
+    <h4>Campaign video</h4><div class="vid" id="dvid"></div>
+    <h4>Campaign photos</h4><div class="gal" id="dgal"></div>
+  </div>
+  <div class="dfoot"><a class="btn" href="voting.html" id="dv">Go to voting</a><button class="btn out" id="dx">Close</button></div>
+</dialog>
+
+<!-- =====================================================================
+     EDIT CANDIDATES HERE (names, photos, videos, achievements)
+     Everything between the two ===== lines below is the only part you edit.
+     ===================================================================== -->
+<script>
+/* =========================================================
+   CANDIDATES - EDIT THIS BLOCK ONLY
+
+   HOW TO ADD A CANDIDATE
+   1. Find the position below (the name in quotes, e.g. "Brunei Country Lead").
+   2. Copy the TEMPLATE block, paste it inside that position's [ ... ].
+   3. Put a comma between candidates. Keep every quote " " and comma , in place.
+
+   TEMPLATE (copy this):
+   {
+     name: "Full Name",
+     tagline: "One-line campaign slogan.",
+     photo: "assest/name.jpg",              // profile picture (leave "" to show initials)
+     bio: "Short biography.",
+     credentials:  ["Credential 1", "Credential 2"],
+     achievements: ["Achievement 1", "Achievement 2"],
+     platform:     ["Plan 1", "Plan 2"],
+     video: "https://youtu.be/XXXXXXXXXXX",  // YouTube / Vimeo / Google Drive / Facebook link
+                                             // OR a file: "assest/name.mp4"  ("" = none)
+     photos: ["assest/name1.jpg", "assest/name2.jpg"]   // campaign images ([] = placeholders)
+   },
+
+   NOTES
+   - Every field except "name" is optional. Missing ones show a placeholder.
+   - Position names must match EXACTLY (copy them from below). A wrong name
+     is ignored and a warning appears in the browser console (F12).
+   - Keep the order of candidates the same once voting has started
+     (their numbers are given in order, and votes are saved by number).
+   - Image/video files go in the "assest" folder (with Flask: static/assest,
+     and write the path as "/static/assest/name.jpg"). Use forward slashes /.
+   - If this whole block has no candidates, the site shows 2 dummy candidates
+     per position so you can test the layout.
+   ========================================================= */
+
+/* ===== EDIT BELOW ===== */
+const CANDIDATE_DATA = {
+
+  "Co-Chairpersons": [
+    {
+      name: "Maria Santos",
+      tagline: "Every voice, one team.",
+      photo: "assest/fam.jpg",
+      bio: "Short bio about Maria goes here.",
+      credentials:  ["Credential 1", "Credential 2"],
+      achievements: ["Achievement 1", "Achievement 2"],
+      platform:     ["Plan 1", "Plan 2"],
+      video: "https://youtu.be/XXXXXXXXXXX",
+      photos: ["assest/maria1.jpg", "assest/fam.jpg"]
+    },
+    
+  ],
+
+  "Deputy for Community Engagement and Programs": [
+    {
+      name: "Maria Santos",
+      tagline: "Every voice, one team.",
+      photo: "assest/fam.jpg",
+      bio: "Short bio about Maria goes here.",
+      credentials:  ["Credential 1", "Credential 2"],
+      achievements: ["Achievement 1", "Achievement 2"],
+      platform:     ["Plan 1", "Plan 2"],
+      video: "https://youtu.be/XXXXXXXXXXX",
+      photos: ["assest/maria1.jpg", "assest/fam.jpg"]
+    }
+
+
+  ],
+
+  "Deputy for Media and Communications": [
+  ],
+
+  "Philippine Country Lead": [
+  ],
+
+  "ASEAN+Country Lead": [
+  ],
+
+  "Brunei Country Lead": [
+  ],
+
+  "Cambodia Country Lead": [
+  ],
+
+  "Lao Country Lead": [
+  ],
+
+  "Malaysia Country Lead": [
+  ],
+
+  "Myanmar Country Lead": [
+  ],
+
+  "Singapore Country Lead": [
+  ],
+
+  "Thailand Country Lead": [
+  ],
+
+  "Vietnam Country Lead": [
+  ],
+
+  "Timor Leste Country Lead": [
+  ],
+
+};
+/* ===== STOP EDITING ===== */
+</script>
+
+<script>
+/* =========================================================
+   SHARED PART - this exact code is in BOTH index.html and voting.html
+   (if you change it, change it in both files)
+   1. DEMO DATA  2. API  3. LOAD DATA  4. HELPERS  5. CARDS  6. MENU
+   ========================================================= */
+
+/* ===== 1. DEMO DATA (fake data, delete when Flask is ready) ===== */
+
+/* name = shown on page, max = candidates a voter may pick,
+   flag = country code ("" = none, "asean" = built-in badge), country = flag alt text */
+const DEMO_POSITIONS = [
+  { name: "Co-Chairpersons",                              max: 2, flag: "" },
+  { name: "Deputy for Community Engagement and Programs", max: 1, flag: "" },
+  { name: "Deputy for Media and Communications",          max: 1, flag: "" },
+  { name: "Philippine Country Lead",  max: 1, flag: "ph",    country: "Philippines" },
+  { name: "ASEAN+Country Lead",       max: 1, flag: "asean", country: "ASEAN" },
+  { name: "Brunei Country Lead",      max: 1, flag: "bn",    country: "Brunei" },
+  { name: "Cambodia Country Lead",    max: 1, flag: "kh",    country: "Cambodia" },
+  { name: "Lao Country Lead",         max: 1, flag: "la",    country: "Laos" },
+  { name: "Malaysia Country Lead",    max: 1, flag: "my",    country: "Malaysia" },
+  { name: "Myanmar Country Lead",     max: 1, flag: "mm",    country: "Myanmar" },
+  { name: "Singapore Country Lead",   max: 1, flag: "sg",    country: "Singapore" },
+  { name: "Thailand Country Lead",    max: 1, flag: "th",    country: "Thailand" },
+  { name: "Vietnam Country Lead",     max: 1, flag: "vn",    country: "Vietnam" },
+  { name: "Timor Leste Country Lead", max: 1, flag: "tl",    country: "Timor-Leste" },
+];
+
+/* Candidates come from CANDIDATE_DATA (the EDIT CANDIDATES block above), so you never edit this part.
+   Once Flask is ready, GET /api/election returns the candidates instead and this block is not used.
+   Each candidate gets its number (id) in the order it appears in that file. */
+const DEMO_CANDIDATES = [];
+
+if (typeof CANDIDATE_DATA !== "undefined") {
+  let nextId = 1;
+  Object.keys(CANDIDATE_DATA).forEach(function (positionName) {
+    if (!DEMO_POSITIONS.some(function (p) { return p.name === positionName; })) {
+      console.warn('CANDIDATE_DATA: position "' + positionName + '" does not exist - check the spelling.');
+      return;
+    }
+    (CANDIDATE_DATA[positionName] || []).forEach(function (c) {
+      DEMO_CANDIDATES.push(Object.assign({ id: nextId }, c, { position: positionName }));
+      nextId++;
+    });
+  });
+} else {
+  console.warn("CANDIDATE_DATA is missing - check the EDIT CANDIDATES block at the top of the page scripts.");
+}
+
+/* Nothing added yet (or file missing): make 2 placeholder candidates per position */
+if (!DEMO_CANDIDATES.length) {
+  let nextId = 1;
+  DEMO_POSITIONS.forEach(function (position) {
+    ["A", "B"].forEach(function (letter) {
+      DEMO_CANDIDATES.push({
+        id: nextId++,
+        name: "Candidate " + letter,
+        position: position.name,
+        tagline: "Your campaign tagline here.",
+      });
+    });
+  });
+}
+
+/* Same shape the Flask endpoint GET /api/election will return */
+const DEMO_ELECTION = {
+  votingOpen: false,                                     // true = voting is open
+  preregisterUrl: "https://forms.gle/REPLACE_WITH_YOUR_FORM",
+  registeredVoters: 362,
+  positions: DEMO_POSITIONS,
+  candidates: DEMO_CANDIDATES,
+};
+
+
+/* ===== 2. API (Flask switch) =====
+   The ONLY part that talks to data / the server.
+   TO USE FLASK: set USE_BACKEND = true and build these routes
+   (JSON in/out; on error return a non-200 status and {"error": "message"}):
+   GET  /api/election -> { votingOpen, preregisterUrl, registeredVoters,
+                           positions:  [{name, max, flag, country}],
+                           candidates: [{id, name, position, tagline, photo, bio,
+                                         credentials, achievements, platform, video, photos}] }
+   GET  /api/me       -> { studentId, hasVoted }      (401 if not logged in)
+   POST /api/login    <- { studentId, password } -> { studentId, hasVoted }  (Flask session cookie)
+   POST /api/logout   -> {}
+   POST /api/vote     <- { candidateIds: [1, 5, 9] }  (check votingOpen, not already voted, max)
+   GET  /api/results  -> { "1": 12, "2": 7, ... }     (candidate id -> votes) */
+
+const USE_BACKEND = false;   // false = demo mode, true = Flask
+
+async function request(method, url, body) {
+  const response = await fetch(url, {
+    method: method,
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",                     // sends the login cookie
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await response.json().catch(function () { return {}; });
+  if (!response.ok) {
+    const error = new Error(data.error || "Something went wrong.");
+    error.status = response.status;
+    throw error;
+  }
+  return data;
+}
+
+const FlaskApi = {
+  getElection: function () { return request("GET", "/api/election"); },
+  me: function () {
+    return request("GET", "/api/me").catch(function (error) {
+      if (error.status === 401) return null;        // simply not logged in
+      throw error;
+    });
+  },
+  login:      function (studentId, password) { return request("POST", "/api/login", { studentId: studentId, password: password }); },
+  logout:     function () { return request("POST", "/api/logout"); },
+  submitVote: function (candidateIds) { return request("POST", "/api/vote", { candidateIds: candidateIds }); },
+  getResults: function () { return request("GET", "/api/results"); },
+};
+
+/* Demo version (no backend, nothing is really saved) */
+const demoVotes = {};   // candidate id -> votes
+
+const DemoApi = {
+  getElection: async function () { return DEMO_ELECTION; },
+  me: async function () {
+    const studentId = sessionStorage.getItem("demo_user");
+    if (!studentId) return null;
+    return { studentId: studentId, hasVoted: sessionStorage.getItem("demo_voted") === "1" };
+  },
+  login: async function (studentId, password) {
+    /* DEMO ONLY: any ID + password is accepted. */
+    sessionStorage.setItem("demo_user", studentId);
+    return DemoApi.me();
+  },
+  logout: async function () {
+    sessionStorage.removeItem("demo_user");
+    sessionStorage.removeItem("demo_voted");
+  },
+  submitVote: async function (candidateIds) {
+    candidateIds.forEach(function (id) { demoVotes[id] = (demoVotes[id] || 0) + 1; });
+    sessionStorage.setItem("demo_voted", "1");
+  },
+  getResults: async function () { return demoVotes; },
+};
+
+const Api = USE_BACKEND ? FlaskApi : DemoApi;
+
+
+/* ===== 3. LOAD DATA ===== */
+
+let votingOpen = false;
+let preregisterUrl = "";
+let registeredVoters = 0;
+let POSITIONS = [];
+let candidates = [];
+
+/* Headings that group the positions on the home page.
+   [title, first position number, last position number] */
+const GROUPS = [
+  ["Executive",     0, 0],
+  ["Deputies",      1, 2],
+  ["Country Leads", 3, 99],
+];
+
+async function loadElection() {
+  const election = await Api.getElection();
+  votingOpen       = election.votingOpen;
+  preregisterUrl   = election.preregisterUrl;
+  registeredVoters = election.registeredVoters;
+  POSITIONS        = election.positions;
+
+  // keep only candidates whose position exists (a typo used to hide them under the first position)
+  candidates = election.candidates.filter(function (c) {
+    const index = POSITIONS.findIndex(function (p) { return p.name === c.position; });
+    if (index < 0) {
+      console.warn('Candidate "' + c.name + '" skipped: unknown position "' + c.position + '".');
+      return false;
+    }
+    c.positionIndex = index;
+    return true;
+  });
+
+  candidates.forEach(function (c) {
+    c.votes        = 0;
+    c.bio          = c.bio || "Short biography will appear here.";
+    c.credentials  = c.credentials  && c.credentials.length  ? c.credentials  : ["Credentials to be added"];
+    c.achievements = c.achievements && c.achievements.length ? c.achievements : ["Achievements to be added"];
+    c.platform     = c.platform     && c.platform.length     ? c.platform     : ["Platform to be added"];
+  });
+}
+
+/* Vote counts (only meaningful once voting is open) */
+async function loadResults() {
+  const counts = await Api.getResults();
+  candidates.forEach(function (c) { c.votes = counts[c.id] || 0; });
+}
+
+
+/* ===== 4. HELPERS ===== */
+
+const $ = function (id) { return document.getElementById(id); };
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, function (ch) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+  });
+}
+
+/* small SVG picture -> something an <img src> understands */
+function svgToUrl(svg) {
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
+
+/* Pre-register button (opens your Google Form in a new tab) */
+function preRegisterButton(extraClasses) {
+  return '<a class="btn ' + extraClasses + '" href="' + escapeHtml(preregisterUrl) + '" target="_blank" rel="noopener">Pre-register</a>';
+}
+
+/* ASEAN badge (flagcdn has no ASEAN flag, so we draw a simple one) */
+const ASEAN_BADGE = svgToUrl(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 30">' +
+  '<rect width="40" height="30" fill="#1d3c8f"/>' +
+  '<circle cx="20" cy="15" r="9" fill="#d62828"/>' +
+  '<circle cx="20" cy="15" r="9" fill="none" stroke="#f4c430" stroke-width="2.2"/>' +
+  '<path d="M20 8v14M15 10v10M25 10v10" stroke="#f4c430" stroke-width="1.6"/></svg>'
+);
+
+/* Small flag image as HTML. Returns "" when the position has no flag. */
+function flagHtml(code, country) {
+  if (!code) return "";
+  const alt = (country || "") + " flag";
+  if (code === "asean") return '<img class="flag" src="' + ASEAN_BADGE + '" alt="' + alt + '">';
+  return '<img class="flag" src="https://flagcdn.com/w40/' + code + '.png"' +
+         ' srcset="https://flagcdn.com/w80/' + code + '.png 2x" alt="' + alt + '" loading="lazy">';
+}
+
+/* Default profile picture with the person's initials */
+function avatarUrl(name) {
+  const initials = escapeHtml(
+    name.split(" ").filter(Boolean).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase()
+  );
+  const hue = (name.length * 47) % 60 + 210;
+  return svgToUrl(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">' +
+    '<rect width="120" height="120" fill="hsl(' + hue + ',60%,86%)"/>' +
+    '<circle cx="60" cy="48" r="22" fill="#1b2380" opacity=".85"/>' +
+    '<path d="M14 120c0-34 20-48 46-48s46 14 46 48z" fill="#1b2380" opacity=".85"/>' +
+    '<text x="60" y="56" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">' + initials + '</text></svg>'
+  );
+}
+
+/* Placeholder campaign photo */
+function placeholderPhoto(name, number) {
+  return svgToUrl(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">' +
+    '<rect width="400" height="300" fill="#1b2380"/>' +
+    '<text x="200" y="150" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#fff" text-anchor="middle">' + escapeHtml(name) + '</text>' +
+    '<text x="200" y="182" font-family="Arial,sans-serif" font-size="16" fill="#cfd4ff" text-anchor="middle">Campaign photo ' + number + '</text></svg>'
+  );
+}
+
+/* Show the candidate's photo; if the file is missing, show the initials avatar */
+function setCandidatePhoto(img, candidate) {
+  img.src = candidate.photo || avatarUrl(candidate.name);
+  img.onerror = function () { this.onerror = null; this.src = avatarUrl(candidate.name); };
+}
+
+/* Turn a YouTube / Vimeo / Google Drive / Facebook link into an embeddable address.
+   Returns "" if the link is not one of those (then it is treated as a video file). */
+function videoEmbedUrl(url) {
+  let m;
+  if ((m = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/)))
+    return "https://www.youtube.com/embed/" + m[1];
+  if ((m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/)))
+    return "https://player.vimeo.com/video/" + m[1];
+  if ((m = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/)))
+    return "https://drive.google.com/file/d/" + m[1] + "/preview";
+  if (/facebook\.com|fb\.watch/.test(url))
+    return "https://www.facebook.com/plugins/video.php?show_text=false&href=" + encodeURIComponent(url);
+  return "";
+}
+
+/* Little message at the bottom of the screen */
+let toastTimer;
+function showToast(message) {
+  const box = $("toast");
+  box.textContent = message;
+  box.style.display = "block";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { box.style.display = "none"; }, 3200);
+}
+
+
+/* ===== 5. CARDS + DETAILS POPUP ===== */
+
+/* One candidate card. forBallot = true -> has a VOTE button */
+function buildCard(candidate, forBallot) {
+  const position = POSITIONS[candidate.positionIndex];
+  const flag = flagHtml(position.flag, position.country);
+  const card = document.createElement("article");
+  card.className = "card";
+  card.innerHTML =
+    '<div class="ph"><img class="av" alt="Photo of ' + escapeHtml(candidate.name) + '">' +
+    (flag ? '<span class="fb">' + flag + '</span>' : '') + '</div>' +
+    '<h3>' + escapeHtml(candidate.name) + '</h3>' +
+    '<small>' + escapeHtml(candidate.tagline || "") + '</small>' +
+    '<div class="bt">' + (forBallot ? '<button class="btn vt"></button>' : '') +
+    '<button class="btn out dt">View Details</button></div>';
+
+  setCandidatePhoto(card.querySelector(".av"), candidate);
+  card.querySelector(".dt").onclick = function () { openDetails(candidate); };
+
+  if (forBallot) {
+    const button = card.querySelector(".vt");
+    const picked = (choices[candidate.positionIndex] || []).includes(candidate.id);
+    button.textContent = !votingOpen ? "Locked" : picked ? "Selected \u2713" : "VOTE";
+    button.className = "btn vt" + (picked ? " sel" : "");
+    button.disabled = hasVoted || !votingOpen;
+    button.onclick = function () { toggleChoice(candidate.positionIndex, candidate.id); };
+  }
+  return card;
+}
+
+/* All candidates of one position */
+function candidatesOf(positionIndex) {
+  return candidates.filter(function (c) { return c.positionIndex === positionIndex; });
+}
+
+/* "View Details" popup */
+function openDetails(c) {
+  const position = POSITIONS[c.positionIndex];
+  const asList = function (items) {
+    return items.map(function (x) { return "<li>" + escapeHtml(x) + "</li>"; }).join("");
+  };
+
+  setCandidatePhoto($("di"), c);
+  $("dn").textContent = c.name;
+  $("dp").innerHTML = "<span>Running for " + escapeHtml(position.name) + "</span>" + flagHtml(position.flag, position.country);
+  $("dq").textContent = c.tagline ? "\u201C" + c.tagline + "\u201D" : "";
+  $("dbio").textContent = c.bio;
+  $("dc").innerHTML = asList(c.credentials);
+  $("da").innerHTML = asList(c.achievements);
+  $("dl").innerHTML = asList(c.platform);
+
+  // video: YouTube/Vimeo/Drive/Facebook link, a video file, or a placeholder text
+  const videoBox = $("dvid");
+  videoBox.innerHTML = "";
+  videoBox.classList.remove("has");
+  if (c.video) {
+    const embed = videoEmbedUrl(c.video);
+    if (embed) {
+      const frame = document.createElement("iframe");
+      frame.src = embed;
+      frame.title = "Campaign video of " + c.name;
+      frame.allow = "accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen";
+      frame.allowFullscreen = true;
+      frame.loading = "lazy";
+      videoBox.appendChild(frame);
+    } else {
+      const video = document.createElement("video");
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = "metadata";
+      video.src = c.video;
+      videoBox.appendChild(video);
+    }
+    videoBox.classList.add("has");
+  } else {
+    videoBox.textContent = "Campaign video will appear here.";
+  }
+
+  // photos (or 3 placeholders)
+  const photos = c.photos && c.photos.length ? c.photos
+               : [placeholderPhoto(c.name, 1), placeholderPhoto(c.name, 2), placeholderPhoto(c.name, 3)];
+  $("dgal").innerHTML = photos.map(function (url, k) {
+    return '<img loading="lazy" alt="Campaign photo ' + (k + 1) + " of " + escapeHtml(c.name) + '" src="' + escapeHtml(url) + '">';
+  }).join("");
+
+  $("dlg").showModal();
+  document.querySelector(".db").scrollTop = 0;
+  $("dgal").scrollLeft = 0;
+}
+
+/* Popup close buttons. Closing also removes the video so it stops playing. */
+$("dx").onclick = $("dxx").onclick = $("dv").onclick = function () { $("dlg").close(); };
+$("dlg").addEventListener("click", function (e) { if (e.target === $("dlg")) $("dlg").close(); });
+$("dlg").addEventListener("close", function () { $("dvid").innerHTML = ""; $("dlg").style.transform = ""; });
+
+/* Phones: swipe the popup header down to close it (like a bottom sheet) */
+(function () {
+  const dialog = $("dlg");
+  const head = dialog.querySelector(".dh");
+  let startY = null;
+  let moved = 0;
+
+  head.addEventListener("touchstart", function (e) {
+    if (!window.matchMedia("(max-width:600px)").matches || e.target.closest(".xb")) return;
+    startY = e.touches[0].clientY;
+    moved = 0;
+    dialog.style.transition = "none";
+  }, { passive: true });
+
+  head.addEventListener("touchmove", function (e) {
+    if (startY === null) return;
+    moved = Math.max(0, e.touches[0].clientY - startY);
+    dialog.style.transform = "translateY(" + moved + "px)";
+  }, { passive: true });
+
+  function release() {
+    if (startY === null) return;
+    startY = null;
+    dialog.style.transition = "transform .2s ease-out";
+    if (moved > 100) { dialog.close(); }
+    dialog.style.transform = "";
+    setTimeout(function () { dialog.style.transition = ""; }, 220);
+  }
+  head.addEventListener("touchend", release);
+  head.addEventListener("touchcancel", release);
+})();
+
+
+/* ===== 6. SIDE MENU ===== */
+
+function closeMenu() { setMenu(false); }
+function setMenu(open) {
+  $("side").classList.toggle("on", open);
+  $("scrim").classList.toggle("on", open);
+}
+document.querySelectorAll("[data-open]").forEach(function (b) { b.onclick = function () { setMenu(true); }; });
+$("sx").onclick = $("scrim").onclick = closeMenu;
+$("side").addEventListener("click", function (e) { if (e.target.closest("a")) closeMenu(); });
+document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
+</script>
+<script>
+/* =========================================================
+   CAMPAIGN PAGE (index.html)
+   Shows the cover, the candidates, and links to voting.html.
+   ========================================================= */
+
+let user = null;   // Student ID if already logged in
+
+/* Buttons that lead to voting.html (they change with login + lock state) */
+function drawChrome() {
+  const votingLink = "voting.html" + (votingOpen ? "#vote" : "");
+  const accountLabel = user ? (votingOpen ? "Vote" : "Dashboard") : "Log in";
+
+  $("heroCta").innerHTML = votingOpen
+    ? '<a class="btn big wh" href="' + votingLink + '">' + (user ? "Vote now" : "Log in to vote") + '</a>'
+    : preRegisterButton("big wh") +
+      '<a class="btn big ghost" href="voting.html">' + (user ? "Go to dashboard" : "Log in") + '</a>';
+
+  $("pubActs").innerHTML =
+    (votingOpen ? "" : preRegisterButton("out hide-s")) +
+    '<a class="btn" href="' + votingLink + '">' + accountLabel + '</a>';
+
+  $("snav").innerHTML =
+    '<a href="#home"><i></i>Home</a>' +
+    '<a href="#candidates"><i></i>Candidates</a>' +
+    '<a href="#about"><i></i>About</a>' +
+    '<a href="#contact"><i></i>Contact Us</a>' +
+    (votingOpen ? "" : '<a href="' + escapeHtml(preregisterUrl) + '" target="_blank" rel="noopener"><i></i>Pre-register</a>') +
+    '<a href="' + votingLink + '"><i></i>' + accountLabel + '</a>';
+}
+
+/* Candidates: 3 tabs (Executive / Deputies / Country Leads), then one position at a time. */
+let homeGroup = 0;       // which tab is open
+let homePosition = 0;    // which position is shown
+
+function drawHome() {
+  // 1. the group tabs
+  const tabs = $("groupTabs");
+  tabs.innerHTML = "";
+  GROUPS.forEach(function (group, g) {
+    const tab = document.createElement("button");
+    tab.className = "tab";
+    tab.textContent = group[0];
+    tab.setAttribute("aria-pressed", g === homeGroup);
+    tab.onclick = function () { homeGroup = g; homePosition = group[1]; drawHome(); };
+    tabs.appendChild(tab);
+  });
+
+  // 2. the positions inside the open tab (no chips if the tab has only one)
+  const first = GROUPS[homeGroup][1];
+  const last = Math.min(GROUPS[homeGroup][2], POSITIONS.length - 1);
+  const chips = $("chips");
+  chips.innerHTML = "";
+  chips.style.display = last > first ? "flex" : "none";
+  for (let i = first; i <= last; i++) {
+    const position = POSITIONS[i];
+    const chip = document.createElement("button");
+    chip.className = "chip";
+    chip.innerHTML = flagHtml(position.flag, position.country) + escapeHtml(position.name);
+    chip.setAttribute("aria-pressed", i === homePosition);
+    chip.onclick = function () { homePosition = i; drawHome(); };
+    chips.appendChild(chip);
+  }
+
+  // 3. the open position and its candidates
+  const position = POSITIONS[homePosition];
+  const list = candidatesOf(homePosition);
+  const area = $("gridHome");
+  area.innerHTML = "";
+  const section = document.createElement("section");
+  section.className = "psec";
+  section.innerHTML =
+    "<header>" + flagHtml(position.flag, position.country) +
+    "<h3>" + escapeHtml(position.name) + "</h3>" +
+    '<span class="n">' + list.length + (list.length === 1 ? " candidate" : " candidates") + "</span></header>";
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  if (list.length) {
+    list.forEach(function (c) { grid.appendChild(buildCard(c, false)); });
+  } else {
+    grid.innerHTML = '<p class="empty">No candidates yet.</p>';
+  }
+  section.appendChild(grid);
+  area.appendChild(section);
+}
+
+
+/* ---------- START ---------- */
+async function start() {
+  await loadElection();
+  const me = await Api.me();            // null when nobody is logged in
+  if (me) user = me.studentId;
+  drawHome();
+  drawChrome();
+}
+start();
+</script>
+</body>
+</html>
