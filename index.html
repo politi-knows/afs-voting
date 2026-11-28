@@ -34,6 +34,35 @@ img,video,svg{max-width:100%}
 .btn.big{padding:13px 28px;font-size:.95rem}
 .btn.wh{background:#fff;color:var(--navy);border-color:#fff}
 .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.75)}
+.btn.soft{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.75)}
+.btn.soft:hover{background:rgba(255,255,255,.28)}
+
+/* NOMINATION notice: card at the top of the Candidates section (below the cover, so the photo is never covered) */
+.nomnote a{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;margin:0;padding:14px 16px 14px 20px;background:var(--lav);border:1.5px solid var(--lav2);border-left:6px solid var(--per);border-radius:16px;text-decoration:none;color:var(--ink)}
+.nomnote strong{display:block;color:var(--navy);font-size:1.02rem;line-height:1.3}
+.nomnote small{display:block;color:var(--muted);font-size:.84rem;margin-top:2px}
+.nomnote span{background:var(--navy);color:#fff;border-radius:999px;padding:9px 20px;font-weight:700;font-size:.85rem;white-space:nowrap}
+.nomnote a:hover span{background:var(--navy2)}
+@media (max-width:600px){
+  .nomnote a{flex-direction:column;align-items:stretch;text-align:left;padding:14px 16px}
+  .nomnote span{text-align:center;padding:12px 16px;min-height:44px}
+}
+.side nav a.hot{background:var(--per);color:#fff}
+/* NOMINATION card inside the cover, on the right (computers). Phones/tablets use the strip above Meet the candidates. */
+/* phones/tablets: the card sits on the cover, right under the icons (above "Meet the candidates") */
+.nomm{margin-top:20px;max-width:420px}
+.nomm:empty{display:none}
+.nomm a{background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-color:rgba(255,255,255,.7);border-left-color:var(--per);box-shadow:0 10px 28px rgba(10,15,60,.35)}
+@media (min-width:860px){.nomm{display:none}}
+@media (max-width:600px){.nomm{max-width:none}.nomm small{display:none}}
+.hero .nomnote:not(.nomm){display:none}
+@media (min-width:860px){
+  .hero .nomnote:not(.nomm){display:block;position:absolute;z-index:3;top:50%;transform:translateY(-50%);width:min(330px,32vw);right:max(clamp(16px,4vw,40px),calc((100vw - 1180px)/2 + clamp(16px,4vw,40px)))}
+  .hero .nomnote:not(.nomm):empty{display:none}
+  .hero .nomnote a{flex-direction:column;align-items:stretch;gap:14px;margin:0;padding:18px 18px 18px 20px;background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-color:rgba(255,255,255,.7);border-left-color:var(--per);box-shadow:0 16px 40px rgba(10,15,60,.35)}
+  .hero .nomnote span{text-align:center}
+}
+
 .btn[disabled]{opacity:.55;cursor:not-allowed}
 .burger{width:44px;height:44px;padding:0;border:1px solid var(--line);background:#fff;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:none;-webkit-appearance:none;appearance:none}
 .burger span{display:block;flex:none;width:20px;height:3px;background:var(--navy);border-radius:2px}
@@ -63,10 +92,13 @@ img,video,svg{max-width:100%}
 .hh .acts .btn{padding:8px 16px}
 .hh .acts .hide-s{display:none}
 @media (min-width:860px){
-  .hh nav{display:flex}
+  .hh nav{display:flex;gap:20px}
   .hh .acts{margin-left:10px}
-  .hh .acts .hide-s{display:inline-block}
   .hh .burger{display:none}
+}
+@media (min-width:1100px){
+  .hh nav{gap:26px}
+  .hh .acts .hide-s{display:inline-block}
 }
 
 /* app header */
@@ -96,6 +128,24 @@ img,video,svg{max-width:100%}
 .cta{display:flex;gap:10px;flex-wrap:wrap}
 .cue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:2;color:#fff;text-decoration:none;font-size:.8rem;font-weight:700;text-align:center;line-height:1.2}
 .cue::after{content:"\2193";display:block;font-size:1.2rem}
+
+/* hero social icons - icon only, no box or circle */
+.socials{display:flex;gap:22px;margin-top:24px}
+.socials a{
+  display:inline-grid;place-items:center;
+  width:32px;height:32px;
+  color:#fff;background:none;border:0;border-radius:0;box-shadow:none;
+  opacity:.9;
+  transition:opacity .2s,transform .2s;
+}
+.socials a svg{width:28px;height:28px;display:block}
+.socials a:hover,.socials a:focus-visible{opacity:1;transform:translateY(-3px) scale(1.12)}
+.socials a:active{transform:scale(.92)}
+@media (max-width:600px){
+  .socials{margin-top:18px;gap:24px}
+  .socials a{width:44px;height:44px}
+}
+
 section.s{padding:clamp(34px,6vw,64px) clamp(16px,4vw,40px)}
 .wrap{max-width:1180px;margin:0 auto}
 h2.t{font-size:clamp(1.4rem,3.6vw,2rem);margin:0 0 4px;color:var(--navy);font-weight:800}
@@ -398,7 +448,31 @@ dialog::backdrop{background:rgba(10,15,60,.55);backdrop-filter:blur(6px);-webkit
       <h1>AUS Fellows Society Voting System</h1>
       <p>Choose your Co-Chairpersons, Deputies, and Country Leads in a secure and accessible platform.</p>
       <div class="cta" id="heroCta"></div>
+
+      <!-- Social icons: replace YOUR_PAGE and the email with your real links -->
+      <div class="socials" aria-label="Follow and contact us">
+        <a href="https://www.instagram.com/aus.fellows/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61580051399453" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 8.5h2.5V5H14a3.5 3.5 0 0 0-3.5 3.5V11H8v3.5h2.5V21H14v-6.5h2.5l.5-3.5h-3V8.8c0-.2.1-.3.3-.3z"/>
+          </svg>
+        </a>
+        <a href="mailto:aus.fellows.society@gmail.com" aria-label="Email us">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="3"/>
+            <path d="M3.5 7.5 12 13l8.5-5.5"/>
+          </svg>
+        </a>
+      </div>
+      <div class="nomnote nomm" id="nomNote3"></div>
     </div>
+    <div class="nomnote" id="nomNote"></div>
     <a class="cue" href="#candidates">Meet the candidates</a>
   </div>
   <section class="s" id="candidates"><div class="wrap">
@@ -412,6 +486,7 @@ dialog::backdrop{background:rgba(10,15,60,.55);backdrop-filter:blur(6px);-webkit
     <h2 class="t">How voting works</h2>
     <div class="steps">
       <div class="step"><h3>Pre-register</h3><p>Fill in the pre-registration form so you are on the voter list.</p></div>
+      <div class="step"><h3>Nominate</h3><p>Submit your nominations through the nomination form before voting opens.</p></div>
       <div class="step"><h3>Log in and choose</h3><p>When voting opens, log in and pick your candidate for each position.</p></div>
       <div class="step"><h3>Submit your ballot</h3><p>Votes can’t be changed after you submit.</p></div>
     </div>
@@ -437,7 +512,7 @@ dialog::backdrop{background:rgba(10,15,60,.55);backdrop-filter:blur(6px);-webkit
     <h4>About</h4><p id="dbio" style="margin:0"></p>
     <h4>Credentials</h4><ul id="dc"></ul>
     <h4>Achievements</h4><ul id="da"></ul>
-    <h4>Platform</h4><ul id="dl"></ul>
+    <h4 id="dlh">Platforms</h4><ul id="dl"></ul>
     <h4>Campaign video</h4><div class="vid" id="dvid"></div>
     <h4>Campaign photos</h4><div class="gal" id="dgal"></div>
   </div>
@@ -501,7 +576,7 @@ const CANDIDATE_DATA = {
     
   ],
 
-  "Deputy for Community Engagement and Programs": [
+  "Head of Community Engagement and Programs": [
     {
       name: "Maria Santos",
       tagline: "Every voice, one team.",
@@ -517,13 +592,52 @@ const CANDIDATE_DATA = {
 
   ],
 
-  "Deputy for Media and Communications": [
+  "Deputy Head of Community Engagement and Programs": [
+  ],
+
+  "Head of Media and Communications": [
+    {
+      name: "Maria Santos",
+      tagline: "Every voice, one team.",
+      photo: "assest/fam.jpg",
+      bio: "Short bio about Maria goes here.",
+      credentials:  ["Credential 1", "Credential 2"],
+      achievements: ["Achievement 1", "Achievement 2"],
+      platform:     ["Plan 1", "Plan 2"],
+      video: "https://youtu.be/XXXXXXXXXXX",
+      photos: ["assest/maria1.jpg", "assest/fam.jpg"]
+    }
+  ],
+
+  "Deputy Head of Media and Communications": [
   ],
 
   "Philippine Country Lead": [
+    {
+      name: "Maria Santos",
+      tagline: "Every voice, one team.",
+      photo: "assest/fam.jpg",
+      bio: "Short bio about Maria goes here.",
+      credentials:  ["Credential 1", "Credential 2"],
+      achievements: ["Achievement 1", "Achievement 2"],
+      platform:     ["Plan 1", "Plan 2"],
+      video: "https://youtu.be/XXXXXXXXXXX",
+      photos: ["assest/maria1.jpg", "assest/fam.jpg"]
+    }
   ],
 
   "ASEAN+Country Lead": [
+    {
+      name: "Maria Santos",
+      tagline: "Every voice, one team.",
+      photo: "assest/fam.jpg",
+      bio: "Short bio about Maria goes here.",
+      credentials:  ["Credential 1", "Credential 2"],
+      achievements: ["Achievement 1", "Achievement 2"],
+      platform:     ["Plan 1", "Plan 2"],
+      video: "https://youtu.be/XXXXXXXXXXX",
+      photos: ["assest/maria1.jpg", "assest/fam.jpg"]
+    }
   ],
 
   "Brunei Country Lead": [
@@ -570,8 +684,10 @@ const CANDIDATE_DATA = {
    flag = country code ("" = none, "asean" = built-in badge), country = flag alt text */
 const DEMO_POSITIONS = [
   { name: "Co-Chairpersons",                              max: 2, flag: "" },
-  { name: "Deputy for Community Engagement and Programs", max: 1, flag: "" },
-  { name: "Deputy for Media and Communications",          max: 1, flag: "" },
+  { name: "Head of Community Engagement and Programs",        short: "Head",        max: 1, flag: "" },
+  { name: "Deputy Head of Community Engagement and Programs", short: "Deputy Head", max: 1, flag: "" },
+  { name: "Head of Media and Communications",                 short: "Head",        max: 1, flag: "" },
+  { name: "Deputy Head of Media and Communications",          short: "Deputy Head", max: 1, flag: "" },
   { name: "Philippine Country Lead",  max: 1, flag: "ph",    country: "Philippines" },
   { name: "ASEAN+Country Lead",       max: 1, flag: "asean", country: "ASEAN" },
   { name: "Brunei Country Lead",      max: 1, flag: "bn",    country: "Brunei" },
@@ -717,9 +833,10 @@ let candidates = [];
 /* Headings that group the positions on the home page.
    [title, first position number, last position number] */
 const GROUPS = [
-  ["Executive",     0, 0],
-  ["Deputies",      1, 2],
-  ["Country Leads", 3, 99],
+  ["Co-Chairs",                         0, 0],
+  ["Community Engagement and Programs", 1, 2],
+  ["Media and Communications",          3, 4],
+  ["Country Leads",                     5, 99],
 ];
 
 async function loadElection() {
@@ -902,6 +1019,13 @@ function openDetails(c) {
   $("da").innerHTML = asList(c.achievements);
   $("dl").innerHTML = asList(c.platform);
 
+  // heading above the plans depends on the position
+  $("dlh").textContent =
+      position.name === "Co-Chairpersons" ? "Plans for AUS"
+    : /Community Engagement|Media and Communications/.test(position.name) ? "Plans for Community and Media"
+    : /Country Lead$/.test(position.name) ? "Plans for the Country"
+    : "Platforms";
+
   // video: YouTube/Vimeo/Drive/Facebook link, a video file, or a placeholder text
   const videoBox = $("dvid");
   videoBox.innerHTML = "";
@@ -999,10 +1123,28 @@ document.addEventListener("keydown", function (e) { if (e.key === "Escape") clos
 
 let user = null;   // Student ID if already logged in
 
+/* Nomination form (Google Form). Replace the link with your real one. */
+const NOMINATION_URL = "https://forms.gle/REPLACE_WITH_NOMINATION_FORM";
+
+/* The Nomination button hides itself automatically after this date (end of December 2).
+   Change the date if the deadline moves. Format: year-month-dayT00:00:00 (this is the first moment it is hidden). */
+const NOMINATION_END = new Date("2026-12-03T00:00:00");
+const nominationOpen = Date.now() < NOMINATION_END.getTime();
+
+function nominationBanner() {
+  if (votingOpen || !nominationOpen) return "";
+  return '<a href="' + escapeHtml(NOMINATION_URL) + '" target="_blank" rel="noopener">' +
+         '<div><strong>Nominate your Co-Chairs, Deputies and Country Leads</strong>' +
+         '<small>Nominations are open until December 2.</small></div>' +
+         '<span>Nominate now &rarr;</span></a>';
+}
+
 /* Buttons that lead to voting.html (they change with login + lock state) */
 function drawChrome() {
   const votingLink = "voting.html" + (votingOpen ? "#vote" : "");
   const accountLabel = user ? (votingOpen ? "Vote" : "Dashboard") : "Log in";
+
+  $("nomNote").innerHTML = $("nomNote3").innerHTML = nominationBanner();
 
   $("heroCta").innerHTML = votingOpen
     ? '<a class="btn big wh" href="' + votingLink + '">' + (user ? "Vote now" : "Log in to vote") + '</a>'
@@ -1019,6 +1161,7 @@ function drawChrome() {
     '<a href="#about"><i></i>About</a>' +
     '<a href="#contact"><i></i>Contact Us</a>' +
     (votingOpen ? "" : '<a href="' + escapeHtml(preregisterUrl) + '" target="_blank" rel="noopener"><i></i>Pre-register</a>') +
+    (votingOpen || !nominationOpen ? "" : '<a class="hot" href="' + escapeHtml(NOMINATION_URL) + '" target="_blank" rel="noopener"><i></i>Nomination</a>') +
     '<a href="' + votingLink + '"><i></i>' + accountLabel + '</a>';
 }
 
@@ -1049,7 +1192,7 @@ function drawHome() {
     const position = POSITIONS[i];
     const chip = document.createElement("button");
     chip.className = "chip";
-    chip.innerHTML = flagHtml(position.flag, position.country) + escapeHtml(position.name);
+    chip.innerHTML = flagHtml(position.flag, position.country) + escapeHtml(position.short || position.name);
     chip.setAttribute("aria-pressed", i === homePosition);
     chip.onclick = function () { homePosition = i; drawHome(); };
     chips.appendChild(chip);
